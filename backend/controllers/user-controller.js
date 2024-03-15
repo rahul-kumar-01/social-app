@@ -39,7 +39,7 @@ export const createSession = async (req, res, next) => {
         return res.cookie('access_token', jwt.sign({id:user.id}, process.env.JWT_SECRET), {
             httpOnly: false,
             secure: true, 
-            domain: process.env.FRONTEND_DOMAIN,          // must be the same as the domain in the browser
+            domain: process.env.BACKEND_DOMAIN,          // must be the same as the domain in the browser
             sameSite : 'none',
           }).status(200).json({ success: 'true', data: rest });  
 
