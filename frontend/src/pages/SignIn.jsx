@@ -17,6 +17,7 @@ export default function SignIn() {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const handleFormData = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value});
@@ -24,6 +25,7 @@ export default function SignIn() {
   }
 
   const handleCreateSession = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try{
       const response = await fetch(`${proxy}/api/user/create-session`, 
@@ -37,6 +39,7 @@ export default function SignIn() {
       });
       const data = await response.json();
       dispatch(setCurrentUser({...data.data}));
+      setLoading(false);
       navigate('/dashboard/home')
     }catch(err){
       console.log(err);
@@ -102,9 +105,16 @@ export default function SignIn() {
             Forgot Password?
           </a>
         </div>
-        <button type='submit' className="w-full py-1.5 px-3 bg-[rgb(115,102,240)] hover:bg-[rgb(103,90,215)] text-white rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:px-4 ">
-          Login
+        <button type='submit' className="w-full py-1.5 px-3 bg-[rgb(115,102,240)] hover:bg-[rgb(103,90,215)] text-white rounded-lg font-medium focus:outline-none  sm:px-4 ">
+        {loading ? (
+          <>Loading ...</>
+        ):
+        (
+          <>Sign In</>
+        )}
         </button>
+        
+          
         </form>
         <div className="flex items-center justify-center mt-6">
           <p className="text-sm text-gray-700 mr-2">New on our platform?</p>

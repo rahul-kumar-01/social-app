@@ -9,6 +9,9 @@ const FormComponent = () => {
   const user = useSelector((state) => state.user.currentUser);
   const [text, setText] = useState('');
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(-1);
 
   const fetchUserPosts = async () => {
     try {
@@ -32,10 +35,10 @@ const FormComponent = () => {
 
   const handleTextChange = (event) => {
     setText(event.target.value);
-    console.log(user);
   };
 
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
     const response = await fetch(`${proxy}/api/post/create-post/${user._id.toString()}`, {
       method: 'POST',
@@ -47,13 +50,21 @@ const FormComponent = () => {
     });
     const data = await response.json();
     console.log(data.success);
+    console.log(data);
 
-    if(data.success == 'true' || data.success == true) await fetchUserPosts();
+    if(data.success == 'true' || data.success == true) {
+      posts.unshift({content: text, _id : data.post._id},);
+      setPosts(posts);
+      setLoading(false);
+    }
     console.log('Submitted:', text);
     setText('');
   };
 
-  const handleDeletePost = async (id) => {
+
+  const handleDeletePost = async (id,index) => {
+    setLoadingDelete(true);
+    setDeleteIndex(index);
     try {
       const response = await fetch(`${proxy}/api/post/delete-post/${id}`, {
         method: 'DELETE',
@@ -64,7 +75,12 @@ const FormComponent = () => {
       });
       const data = await response.json();
       console.log(data.success);
-      if(data.success == 'true' || data.success == true) await fetchUserPosts();
+      if(data.success == 'true' || data.success == true) {
+        posts.splice(index,1);
+        setPosts([...posts]);
+        setDeleteIndex(-1);
+        setLoadingDelete(false);
+      }
     } catch (error) {
       console.error('Error deleting post:', error);
     }
@@ -91,7 +107,9 @@ const FormComponent = () => {
       </div>
       <div>
         <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">
-          Submit
+          {
+            loading  ? 'Loading...' : 'Submit'
+          }
         </button>
       </div>
     </form>
@@ -101,12 +119,20 @@ const FormComponent = () => {
       </div>
 
     <div className="max-w-md mx-auto mt-8">
-      {posts && posts.map((post) => (
+      {posts && posts.map((post,index) => (
         <div key={post._id} className="bg-white shadow-md rounded-md p-4 mb-4 flex items-center justify-between">
           <p>{post.content}</p>
-          <TrashIcon className="w-6 h-6 text-red-500 cursor-pointer" 
-          onClick={() => handleDeletePost(post._id.toString())}
-          />
+          {
+            loadingDelete  && deleteIndex == index ? 'Loading...' : 
+            (
+              
+              <div>
+                  <TrashIcon className={`w-6 h-6 text-red-500 cursor-pointer ${loadingDelete ? 'opacity-50' : ''}`}
+                    onClick={loadingDelete ? null : () => handleDeletePost(post._id.toString(), index)}/>
+              </div>
+              
+            )
+          }
         </div>
       ))}
     </div>

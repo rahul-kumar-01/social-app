@@ -1,33 +1,33 @@
-import React from 'react'
+import react from 'react';
 import { useState,useEffect } from 'react';
+import {useSelector} from 'react-redux';
 import {proxy} from '../../utils/proxy.js';
 
 
-
 export default function Dashboard() {
-  // const [sector, setSector] = useState({trendingSector: "- - -"});
-  // const [topic, setTopic] = useState({trendingTopic: "- - -"});
-  // const [lastYear, setLastYear] = useState({countForYear2024:'- - -'});
-  // const [startYear, setStartYear] = useState({countForYear2024:'- - -'});
+  const [feeds, setFeeds] = useState([]);
+  const currentUser = useSelector((state) => state.user.currentUser);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const urls = [
-  //       'http://localhost:8000/api/data/get-data/sector',
-  //       'http://localhost:8000/api/data/get-data/topic',
-  //       'http://localhost:8000/api/data/get-data/end-year',
-  //       'http://localhost:8000/api/data/get-data/start-year'
-  //     ];
-  //     const responses = await Promise.all(urls.map(url => fetch(url)));
-  //     const jsonResponses = await Promise.all(responses.map(response => response.json()));
-  //     const [sectorData, topicData, lastYearData, startYearData] = jsonResponses;
-  //     setSector(sectorData);
-  //     setTopic(topicData);
-  //     setLastYear(lastYearData);
-  //     setStartYear(startYearData);
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchFeeds = async () => {
+      try {
+        const response = await fetch(`${proxy}/api/user/get-feed/${currentUser._id.toString()}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+        const data = await response.json();
+        setFeeds(data.data);
+      } catch (error) {
+        console.error('Error fetching feeds:', error);
+      }
+    };
+    fetchFeeds();
+  }
+  , []);
+
 
   return (
     <>
@@ -35,9 +35,22 @@ export default function Dashboard() {
       <div className="py-2">
         <h1 className="text-4xl font-bold">Dashboard</h1>
         <p className="text-gray-500">Welcome back, John Doe</p>
+        <p className='pt-5 text-md font-semibold '>Recent Feeds: </p>
       </div>
 
-      
+      {
+        feeds.map((feed) => {
+          return (
+            <div className="bg-white p-4 rounded-lg shadow-md my-4">
+              <div className="flex items-center">
+                <img src={feed.post.user.avatar} alt={feed.post.user.name} className="w-8 h-8 rounded-full mr-2" />
+                <p className="text-sm font-medium">{feed.post.user.name}</p>
+              </div>
+              <p className='py-2 text-md' style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>{feed.post.content}</p>
+            </div>
+          )
+        })
+      }
     </>
   )
 }

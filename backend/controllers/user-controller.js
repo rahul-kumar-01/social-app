@@ -2,6 +2,7 @@ import User from '../models/user-schema.js';
 import {errorHandler} from '../utils/errorHandler.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import Feed from '../models/feed-schema.js';
 
 export const createUser = async (req, res, next) => {
     try{
@@ -133,12 +134,26 @@ export const getUpdatedFeed = async (req, res, next) => {
         if(!user) errorHandler(404, 'User not found');
         user = await user.populate('feeds');
         const feeds = user.feeds;
-        const unseenFeed = feeds.filter((feed) => !feed.seen);
-        feeds.map(async (feed) => {
-            feed.seen = true;
-            await feed.save();
-        })
-        return res.status(200).json({ success: 'true', data: unseenFeed });
+        let populatedFeeds = [];
+        await Promise.all(feeds.map(async (feed) => {
+            // 
+            const temp = await Feed.findById(feed).populate({
+                path: 'post',
+                populate: {
+                    path: 'user',
+                    model: 'User'
+                }
+            });
+            console.log(temp);
+            populatedFeeds.push(temp);  
+        }));
+        
+        // const unseenFeed = feeds.filter((feed) => !feed.seen);
+        // feeds.map(async (feed) => {
+        //     feed.seen = true;
+        //     await feed.save();
+        // })
+        return res.status(200).json({ success: 'true', data: populatedFeeds });
     } catch (err) {
         next(err);
     }

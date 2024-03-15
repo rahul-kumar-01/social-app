@@ -1,10 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/user-schema.js';
-import { errorHandler } from './errorHandler.js';
 
 export const verfiyToken = async (req, res, next) => {
-    console.log("asdf",req.cookies);
-    console.log("asdfasdf",req.cookies.access_token);
     const token = req.cookies.access_token;
     if (!token) return res.status(401).json({ error: 'Access denied' });
     try {

@@ -36,9 +36,9 @@ export default function Search() {
     setQuery(e.target.value);
   };
 
-  useEffect(() => {
-    searchUsers();
-  }, [query]);
+  // useEffect(() => {
+  //   searchUsers();
+  // }, [query]);
 
   const handleAddFriend = async (id) => {
     try {
