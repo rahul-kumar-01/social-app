@@ -2,6 +2,7 @@ import {useState,} from 'react'
 import {useNavigate} from 'react-router-dom';
 import frontImage from '../../utils/front.png';
 import {proxy} from '../../utils/proxy.js';
+import logo from '../../utils/logo.svg';
 
 import {
     FaFacebookF,
@@ -58,16 +59,17 @@ export default function SignUp() {
   }
 
   return (
-    <div className='flex justify-center items-center h-[100vh] gap-5 p-10'>
+    <div className='flex justify-center items-center h-[100vh] gap-5 p-3'>
         <div className=' hidden w-[50vw] h-[100vh] lg:flex justify-center items-center flex-1'>
             <img src={frontImage} alt='front' className='h-[70%] '/>
         </div>
         <div >
 
       <div className="min-h-screen flex flex-col items-center justify-center  h-[100%] w-[100%]">
-      <div className="bg-white  rounded-lg px-8 py-8 w-full max-w-md">
-        <h1 className="text-2xl  text-center mb-4 font-light ">Welcome to Vuexy!</h1>
-        <p className="text-gray-700 text-center mb-8">
+      <div className="bg-white  rounded-lg px-2 py-2 w-full max-w-md sm:px-8 sm:py-8">
+        <img src={logo} alt='logo' className='h-[50px] w-[50px] '/>
+        <h1 className="text-2xl   mb-4 font-light ">Welcome to Vuexy!</h1>
+        <p className="text-gray-700 r mb-8">
           Please sign-in to your account and start the adventure
         </p>
         {/* <div className='bg-[rgb(232,231,253)]  rounded-lg  my-4 text-xs p-3 text-purple-500 font-light sm:text-sm' >

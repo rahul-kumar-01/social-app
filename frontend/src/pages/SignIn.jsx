@@ -57,14 +57,14 @@ export default function SignIn() {
 
 
   return (
-    <div className='flex justify-center items-center h-[100vh] gap-5 p-10'>
+    <div className='flex justify-center items-center h-[100vh]  gap-5 p-3'>
         <div className=' hidden w-[50vw] h-[100vh] lg:flex justify-center items-center flex-1'>
             <img src={frontImage} alt='front' className='h-[70%] '/>
         </div>
         <div >
 
       <div className="min-h-screen flex flex-col items-center justify-center  h-[100%] w-[100%]">
-      <div className="bg-white  rounded-lg px-8 py-8 w-full max-w-md">
+      <div className="bg-white  rounded-lg px-2 py-2 w-full max-w-md sm:px-8 sm:py-8">
         <img src={logo} alt='logo' className='h-[50px] w-[50px] '/>
         <h1 className="text-2xl   mb-4 font-light ">Welcome to Vuexy!</h1>
         <p className="text-gray-700  mb-8">
