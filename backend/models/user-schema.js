@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: avatarUrls[Math.random()*avatarUrls.length]
+    default: avatarUrls[Math.round(Math.random()*avatarUrls.length)]
   },
   followers: {
     type: [

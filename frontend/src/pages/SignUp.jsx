@@ -20,8 +20,20 @@ export default function SignUp() {
   }
 
   const handleCreateSession = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
+    if(formData.password){
+      if(formData.password.length < 8 || formData.password.length > 20){
+        setError('Password must be between 8 to 20 characters');
+        setLoading(false);
+        setTimeout(() => {
+          setError(null);
+        },2000);
+        return;
+      }
+    }
+    
+    
     try{
       const response = await fetch(`${proxy}/api/user/create-user`, {
         method: 'POST',
@@ -40,6 +52,7 @@ export default function SignUp() {
       }
       setLoading(false);
     }catch(err){
+      setError(err.message);
     }
   }
 
@@ -111,7 +124,7 @@ export default function SignUp() {
         </div>
 
 
-        <button type='submit' className="w-full py-1.5 px-3 bg-[rgb(115,102,240)] hover:bg-[rgb(103,90,215)] text-white rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:px-4 ">
+        <button type='submit' className="w-full py-1.5 px-3 bg-[rgb(115,102,240)] hover:bg-[rgb(103,90,215)] text-white rounded-lg font-medium focus:outline-none  sm:px-4 ">
           {loading ? <>Loading...</> : <>Sign Up</>} 
         </button>
         {error && <p className='text-red-500 text-sm mt-4'>{error}</p>}
