@@ -6,12 +6,15 @@ import {proxy} from '../../utils/proxy.js';
 
 
 export default function Dashboard() {
+  const user = useSelector((state) => state.user.currentUser);
   const [feeds, setFeeds] = useState([]);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFeeds = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`${proxy}/api/user/get-feed/${currentUser._id.toString()}`, {
           method: 'GET',
@@ -25,6 +28,7 @@ export default function Dashboard() {
       } catch (error) {
         console.error('Error fetching feeds:', error);
       }
+      setLoading(false);
     };
     fetchFeeds();
   }
@@ -36,10 +40,15 @@ export default function Dashboard() {
 
       <div className="py-2">
         <h1 className="text-4xl font-bold">Dashboard</h1>
-        <p className="text-gray-500">Welcome back, John Doe</p>
-        <p className='pt-5 text-md font-semibold '>{feeds && feeds.length >0 ? <span>Recent Feeds: </span> : <span>No Feeds ...</span> }</p>
+        <p className="text-gray-500">Welcome back, {user.name}</p>
+        <p className='pt-5 text-md font-semibold '>
+        {!loading ? (feeds.length === 0 ? <p>No Feeds ...</p> : <p>Recent Feeds: </p>) : null}
+
+
+        </p>
       </div>
     <div className='max-w-xl'>
+      {loading && <p className=' text-[rgb(131,119,248)] text-lg'>Loading...</p>}
       {feeds && feeds.length > 0 ? 
         (
           feeds.map((feed) => {
@@ -57,7 +66,10 @@ export default function Dashboard() {
         :
         (
           <> 
-            <p className='text-[rgb(131,119,248)] cursor-pointer' onClick={()=>{navigate('/dashboard/search')}}>Add some friends</p>
+          {
+            !loading && <p className='text-[rgb(131,119,248)] cursor-pointer' onClick={()=>{navigate('/dashboard/search')}}>Add some friends</p>
+          }
+            
           </>
         )
       }

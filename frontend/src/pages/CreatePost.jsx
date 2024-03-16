@@ -13,8 +13,10 @@ const FormComponent = () => {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(-1);
   const [error, setError] = useState(null);
+  const [loadingPost, setLoadingPost] = useState(false);
 
   const fetchUserPosts = async () => {
+    setLoadingPost(true);
     try {
       const getUserPost = await fetch(`${proxy}/api/post/get-post/${user._id.toString()}`, {
         method: 'GET',
@@ -28,6 +30,7 @@ const FormComponent = () => {
     } catch (error) {
       console.error('Error fetching user posts:', error);
     }
+    setLoadingPost(false);
   };
 
   useEffect(() => {
@@ -97,10 +100,10 @@ const FormComponent = () => {
     <>
     <div className="py-2">
         <h1 className="text-4xl font-bold">Create Post</h1>
-        <p className="text-gray-500">Welcome back, John Doe</p>
+        <p className="text-gray-500">Welcome back, {user.name}</p>
       </div>
 
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">
+    <form onSubmit={handleSubmit} className="max-w-lg mt-8">
       <div className="mb-4">
         <label htmlFor="textArea" className="block text-gray-700">Enter text:</label>
         <textarea
@@ -128,7 +131,9 @@ const FormComponent = () => {
         <h1 className="text-2xl font-bold">Recent Post</h1>
       </div>
 
-    <div className="max-w-md mx-auto mt-8">
+    {loadingPost && <p className='p-3 text-[rgb(131,119,248)] text-lg'>Loading...</p>}
+
+    <div className="max-w-lg mt-8">
       {posts && posts.map((post,index) => (
         <div key={post._id} className="bg-white shadow-md rounded-md p-4 mb-4 flex items-center justify-between">
           <p>{post.content}</p>

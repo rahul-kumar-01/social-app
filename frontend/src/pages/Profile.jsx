@@ -66,7 +66,7 @@ export default function Profile() {
     <>
       <div className="py-2">
         <h1 className="text-4xl font-bold">Profile</h1>
-        <p className="text-gray-500">Welcome back, John Doe</p>
+        <p className="text-gray-500">Welcome back, {user.name}</p>
       </div>
 
       <div className="max-w-md  mt-8">

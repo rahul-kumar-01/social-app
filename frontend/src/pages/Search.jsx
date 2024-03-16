@@ -6,6 +6,7 @@ import {proxy} from '../../utils/proxy.js';
 export default function Search() {
   const [query, setQuery] = React.useState('');
   const [users, setUsers] = React.useState([]);
+
   const [addLoading, setAddLoading] = React.useState(false);
   const [searchLoading, setSearchLoading] = React.useState(false);
 
@@ -63,10 +64,12 @@ export default function Search() {
     <>
       <div className="py-2">
         <h1 className="text-4xl font-bold">Search</h1>
-        <p className="text-gray-500">Welcome back, John Doe</p>
+        <p className="text-gray-500">Welcome back, {currentUser.name}</p>
       </div>
 
-      <div className="max-w-md mx-auto mt-8 flex border rounded-lg items-center gap-2 border-indigo-500 px-2">
+      
+
+      <div className="max-w-md  mt-8 flex border rounded-lg items-center gap-2 border-indigo-500 px-2">
         <input
           type="text"
           value={query}
@@ -79,6 +82,12 @@ export default function Search() {
           onClick={searchUsers}
         />
       </div>
+      <div className='max-w-lg'>
+
+      
+      {friends.length === 0 && nonFriends.length === 0 && !searchLoading && (
+        <p className="text-lg p-2">No users found</p>
+      )}
 
       {searchLoading ? <p className='text-lg p-5'>Loading...</p> : 
       (
@@ -142,12 +151,8 @@ export default function Search() {
         </>
       )
       
-      
-
       }
-      {friends.length === 0 && nonFriends.length === 0 && !searchLoading && (
-        <p className="text-lg p-5">No users found</p>
-      )}
+      </div>
     </>
   );
 }

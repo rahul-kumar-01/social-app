@@ -61,7 +61,7 @@ export default function Friends() {
     <>
       <div className="py-2">
         <h1 className="text-4xl font-bold">Friends</h1>
-        <p className="text-gray-500">Welcome back, John Doe</p>
+        <p className="text-gray-500">Welcome back, {currentUser.name}</p>
       </div>
       <div className="flex  space-x-4 py-4">
         <button
