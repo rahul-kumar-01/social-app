@@ -145,6 +145,9 @@ export default function Search() {
       
 
       }
+      {friends.length === 0 && nonFriends.length === 0 && !searchLoading && (
+        <p className="text-lg p-5">No users found</p>
+      )}
     </>
   );
 }
