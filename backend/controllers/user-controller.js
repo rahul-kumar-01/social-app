@@ -8,7 +8,7 @@ export const createUser = async (req, res, next) => {
     try{
         const { uuid,name, password,bio,avatar,followers,following,posts } = req.body;
         let user = await User.findOne({ uuid });
-        if (user) errorHandler(404, 'uuid already exists');
+        if (user) errorHandler(404, 'User Id already exists');
         const salt = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, salt);
         user = new User({ uuid,name, password:encryptedPassword,bio,avatar,followers,following,posts });

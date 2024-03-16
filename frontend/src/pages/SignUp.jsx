@@ -8,16 +8,19 @@ import {
     FaGoogle
   } from 'react-icons/fa';
 
+
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleFormData = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value});
-    console.log(formData);
   }
 
   const handleCreateSession = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try{
       const response = await fetch(`${proxy}/api/user/create-user`, {
@@ -32,7 +35,10 @@ export default function SignUp() {
       if(data.success == 'true'){
         navigate('/');
       }
-      console.log(data);
+      else{
+        setError(data.message);
+      }
+      setLoading(false);
     }catch(err){
     }
   }
@@ -105,33 +111,25 @@ export default function SignUp() {
         </div>
 
 
-        <div className="flex items-center justify-between mb-6">
-          <label className="flex items-center text-sm font-medium text-gray-700">
-            <input type="checkbox" className="mr-2 rounded" />
-            Remember me
-          </label>
-          <a href="#" className="text-sm text-[rgb(115,102,240)] hover:underline">
-            Forgot Password?
-          </a>
-        </div>
         <button type='submit' className="w-full py-1.5 px-3 bg-[rgb(115,102,240)] hover:bg-[rgb(103,90,215)] text-white rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:px-4 ">
-          Sign Up
+          {loading ? <>Loading...</> : <>Sign Up</>} 
         </button>
+        {error && <p className='text-red-500 text-sm mt-4'>{error}</p>}
         </form>
-        <div className="flex items-center justify-center mt-6">
-          <p className="text-sm text-gray-700 mr-2">New on our platform?</p>
-          <a href="#" className="text-sm text-[rgb(115,102,240)] hover:underline">
-            Create an account
-          </a>
+        <div className="flex items-center  mt-6">
+          <p className="text-sm text-gray-700 mr-2">Already have a account ? </p>
+          <span className="text-sm text-[rgb(115,102,240)] hover:underline font-semibold cursor-pointer" onClick={()=> { navigate ('/');}}>
+            Sign In
+          </span>
         </div>
 
         <p className="text-sm text-gray-700 mr-2 flex justify-center items-center gap-5 p-3"> <hr className='border border-grey-400 flex-1'/> <span>or</span> <hr className='border border-grey-500 flex-1'/></p>
         <div className="flex items-center justify-center mt-4">
         
-           <a href="#" className="text-sm text-blue-500 hover:underline ml-2 p-3 bg-red-200 m-2 rounded-lg hover:bg-red-300">
+           <a href="#" className="text-sm text-blue-500 hover:underline ml-2 p-3 bg-red-200 m-2 rounded-lg hover:bg-red-300 cursor-not-allowed">
             <FaGoogle className='text-red-400'/>
           </a>
-          <a href="#" className="text-sm text-blue-500 hover:underline p-3 bg-blue-200 m-2 rounded-lg hover:bg-blue-300">
+          <a href="#" className="text-sm text-blue-500 hover:underline p-3 bg-blue-200 m-2 rounded-lg hover:bg-blue-300 cursor-not-allowed">
           <FaFacebookF/>
           </a>
           

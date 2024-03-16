@@ -6,15 +6,16 @@ import {proxy} from '../../utils/proxy.js';
 export default function Search() {
   const [query, setQuery] = React.useState('');
   const [users, setUsers] = React.useState([]);
+  const [addLoading, setAddLoading] = React.useState(false);
+  const [searchLoading, setSearchLoading] = React.useState(false);
 
   const [friends, setFriends] = React.useState([]);
   const [nonFriends, setNonFriends] = React.useState([]);
 
     const currentUser = useSelector((state) => state.user.currentUser);
-    console.log(currentUser);
 
   const searchUsers = async () => {
-    console.log("query",query);
+    setSearchLoading(true);
     try {
       const response = await fetch(`${proxy}/api/user/search-users/${query}`, {
         method: 'GET',
@@ -24,9 +25,9 @@ export default function Search() {
         credentials: 'include'
       });
       const data = await response.json();
-      console.log(data);
         setFriends(data.data.Freinds);
         setNonFriends(data.data.NonFriends);
+      setSearchLoading(false);
     } catch (error) {
       console.error('Error searching users:', error);
     }
@@ -41,8 +42,9 @@ export default function Search() {
   // }, [query]);
 
   const handleAddFriend = async (id) => {
+    setAddLoading(true);
     try {
-      const response = await fetch(`https://social-app-api-beta.vercel.app/api/user/follow-to?currentUserId=${currentUser._id.toString()}&followingUserId=${id}`, {
+      const response = await fetch(`${proxy}/api/user/follow-to?currentUserId=${currentUser._id.toString()}&followingUserId=${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ export default function Search() {
         credentials: 'include'
       });
       const data = await response.json();
-      console.log(data);
+      setAddLoading(false);
       searchUsers();
     } catch (error) {
       console.error('Error adding friend:', error);
@@ -77,8 +79,11 @@ export default function Search() {
           onClick={searchUsers}
         />
       </div>
-      
-      <div className="flex flex-col space-y-4 mt-8">
+
+      {searchLoading ? <p className='text-lg p-5'>Loading...</p> : 
+      (
+        <>
+            <div className="flex flex-col space-y-4 mt-8">
         <h2 className="text-2xl font-bold"></h2>
         <div className="flex flex-col space-y-2">
           {Object.keys(friends).length>0  && friends.map((friend) => (
@@ -100,32 +105,46 @@ export default function Search() {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="flex flex-col space-y-4 mt-8">
-        <h2 className="text-2xl font-bold"></h2>
-        <div className="flex flex-col space-y-2">
-          {nonFriends && nonFriends.map((nonFriend) => (
-            <div key={nonFriend._id} className="flex items-center justify-between bg-white shadow-md rounded-md p-4">
-              <div className="flex items-center">
-                <img
-                  src={nonFriend.avatar}
-                  alt={nonFriend.name}
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="ml-4">
-                  <h3 className="text-lg font-semibold">{nonFriend.name}</h3>
-                  <p className="text-gray-500">{nonFriend.bio}</p>
-                </div>
-              </div>
-              <UserPlusIcon
-                className="w-6 h-6 text-blue-500 cursor-pointer"
-                onClick={() => handleAddFriend(nonFriend._id)}
-              />
             </div>
-          ))}
-        </div>
-      </div>
+
+      
+
+            <div className="flex flex-col space-y-4 mt-8">
+              <h2 className="text-2xl font-bold"></h2>
+              <div className="flex flex-col space-y-2">
+                {nonFriends && nonFriends.map((nonFriend) => (
+                  <div key={nonFriend._id} className="flex items-center justify-between bg-white shadow-md rounded-md p-4">
+                    <div className="flex items-center">
+                      <img
+                        src={nonFriend.avatar}
+                        alt={nonFriend.name}
+                        className="w-12 h-12 rounded-full"
+                      />
+                      <div className="ml-4">
+                        <h3 className="text-lg font-semibold">{nonFriend.name}</h3>
+                        <p className="text-gray-500">{nonFriend.bio}</p>
+                      </div>
+                    </div>
+                    {
+                      addLoading ? (
+                        <p>Loading...</p>
+                      ) : (
+                        <UserPlusIcon
+                          className="w-6 h-6 text-blue-500 cursor-pointer"
+                          onClick={() => handleAddFriend(nonFriend._id)}
+                        />
+                      )
+                    }
+                  </div>
+                ))}
+              </div>
+            </div>
+        </>
+      )
+      
+      
+
+      }
     </>
   );
 }

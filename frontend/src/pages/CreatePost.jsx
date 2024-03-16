@@ -49,15 +49,12 @@ const FormComponent = () => {
       credentials: 'include'
     });
     const data = await response.json();
-    console.log(data.success);
-    console.log(data);
 
     if(data.success == 'true' || data.success == true) {
       posts.unshift({content: text, _id : data.post._id},);
       setPosts(posts);
       setLoading(false);
     }
-    console.log('Submitted:', text);
     setText('');
   };
 
@@ -74,7 +71,6 @@ const FormComponent = () => {
         credentials: 'include'
       });
       const data = await response.json();
-      console.log(data.success);
       if(data.success == 'true' || data.success == true) {
         posts.splice(index,1);
         setPosts([...posts]);

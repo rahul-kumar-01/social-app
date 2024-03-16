@@ -50,13 +50,11 @@ export default function NavLinks() {
         credentials: 'include',
       });
       const data = await response.json();
-      console.log(data);
       if(data.success == 'true'){
         dispatch(removeCurrentuser());
         navigate('/');
       }
     }catch(err){
-      console.log(err); 
     }
   }
 
@@ -77,7 +75,7 @@ export default function NavLinks() {
                   const LinkIcon = link.icon;
                   return (
                     <Link to={link.href} key={index}>
-                  <p
+                  <span
                       key={link.name}
                       href={link.href}
                       className={clsx(
@@ -89,7 +87,7 @@ export default function NavLinks() {
                   >
                       <LinkIcon className="w-6" />
                       <p className="hidden md:block">{link.name}</p>
-                  </p>
+                  </span>
                   </Link>
                   );
               })}
