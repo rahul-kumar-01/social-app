@@ -1,12 +1,14 @@
 import react from 'react';
 import { useState,useEffect } from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector } from 'react-redux';
+import {useNavigate} from 'react-router-dom'
 import {proxy} from '../../utils/proxy.js';
 
 
 export default function Dashboard() {
   const [feeds, setFeeds] = useState([]);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFeeds = async () => {
@@ -35,10 +37,12 @@ export default function Dashboard() {
       <div className="py-2">
         <h1 className="text-4xl font-bold">Dashboard</h1>
         <p className="text-gray-500">Welcome back, John Doe</p>
-        <p className='pt-5 text-md font-semibold '>Recent Feeds: </p>
+        <p className='pt-5 text-md font-semibold '>{feeds.length >0 ? <span>Recent Feeds: </span> : <span>No Feeds ...</span> }</p>
       </div>
 
-      {
+
+      {feeds.length > 0 ? 
+      (
         feeds.map((feed) => {
           return (
             <div className="bg-white p-4 rounded-lg shadow-md my-4">
@@ -50,6 +54,13 @@ export default function Dashboard() {
             </div>
           )
         })
+      )
+      :
+      (
+        <> 
+          <p className='text-[rgb(131,119,248)] cursor-pointer' onClick={()=>{navigate('/dashboard/search')}}>Add some friends</p>
+        </>
+      )
       }
     </>
   )

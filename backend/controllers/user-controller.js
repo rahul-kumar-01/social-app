@@ -102,14 +102,23 @@ export const followToUser = async (req, res, next) => {
         if(req.query.currentUserId !== req.user.id) errorHandler(401, 'Unauthorized');
         if(req.query.currentUserId === req.query.followingUserId) errorHandler(401,'You can not follow yourself');
         const currentUser = await User.findOne({_id:req.query.currentUserId});
-        const followingUser = await User.findOne({_id:req.query.followingUserId});
-        if(!followingUser) return errorHandler(404, 'User not found');
-        if(currentUser.following.includes(followingUser._id)) return errorHandler(401, 'You already follow this user');
-        currentUser.following.push(followingUser._doc);
-        followingUser.followers.push(currentUser._doc);
+        const user_to_follow = await User.findOne({_id:req.query.followingUserId});
+        if(!user_to_follow) return errorHandler(404, 'User not found');
+        if(currentUser.following.includes(user_to_follow._id)) return errorHandler(401, 'You already follow this user');
+        currentUser.following.push(user_to_follow._doc);
+        user_to_follow.followers.push(currentUser._doc);
+        console.log('user_to_follow',user_to_follow.posts);
+
+        await Promise.all(user_to_follow.posts.map(async (post_obj) => {
+            const feed = await Feed.create({ user: currentUser._id, post: post_obj });
+            console.log("feed", feed);
+            currentUser.feeds.unshift(feed._id);
+            console.log("a", currentUser.feeds);
+        }));
+        
         await currentUser.save();
-        await followingUser.save();
-        return res.status(200).json({ success: 'true', message: `${currentUser.name} start follow ${followingUser.name}` });
+        await user_to_follow.save();
+        return res.status(200).json({ success: 'true', message: `${currentUser.name} start follow ${user_to_follow.name}` });
     }catch(err){
         next(err);
     }
@@ -147,6 +156,14 @@ export const getUpdatedFeed = async (req, res, next) => {
             console.log(temp);
             populatedFeeds.push(temp);  
         }));
+
+        user.following.map(async (followingUser) => {
+            const followingUserPosts = await User.findById(followingUser).populate('posts');
+            followingUserPosts.posts.map(async (post) => {
+                console.log("post",post);
+                populatedFeeds.push(post);
+            })
+        });
         
         // const unseenFeed = feeds.filter((feed) => !feed.seen);
         // feeds.map(async (feed) => {

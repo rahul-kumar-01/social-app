@@ -12,6 +12,7 @@ const FormComponent = () => {
   const [loading, setLoading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(-1);
+  const [error, setError] = useState(null);
 
   const fetchUserPosts = async () => {
     try {

@@ -71,7 +71,7 @@ export default function SignIn() {
           Please sign-in to your account and start the adventure
         </p>
         <div className='bg-[rgb(232,231,253)]  rounded-lg  my-4 text-xs p-3 text-purple-500 font-light sm:text-sm' >
-            <p>User Id: <span className='font-semibold'>demo</span> / Pass: <span className='font-semibold'>demo123</span></p>
+            <p>User Id: <span className='font-semibold'>demo</span> / Pass: <span className='font-semibold'>demo1234</span></p>
             {/* <p>Client Email: <span className='font-semibold'>client@demo.com </span>/ Pass: <span className='font-semibold'>client</span></p> */}
 
 
