@@ -41,6 +41,16 @@ const FormComponent = () => {
   const handleSubmit = async (event) => {
     setLoading(true);
     event.preventDefault();
+
+    if(text.length < 10 || text.length > 200) {
+      setError('Post must be between 10 to 200 characters');
+      setTimeout(() => {
+        setError(null);
+        setLoading(false);
+      },2000);
+      return;
+    }
+    
     const response = await fetch(`${proxy}/api/post/create-post/${user._id.toString()}`, {
       method: 'POST',
       headers: {
@@ -103,11 +113,14 @@ const FormComponent = () => {
         />
       </div>
       <div>
-        <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">
+        <button type="submit" className={`px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 ${loading ? 'cursor-not-allowed opacity-45' : 'null'}`}>
           {
             loading  ? 'Loading...' : 'Submit'
           }
         </button>
+        {
+          error && <p className='text-red-500 text-sm mt-2'>{error}</p>
+        }
       </div>
     </form>
 

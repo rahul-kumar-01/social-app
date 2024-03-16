@@ -27,7 +27,7 @@ router.get('/delete-user/:id',verfiyToken,deleteUser);
 router.get('/get-feed/:id',verfiyToken,getUpdatedFeed);
 router.get('/search-users/:query',verfiyToken,searchUsers);      //query is name of user
 
-router.get('/follow-to/',verfiyToken, followToUser);
+router.post('/follow-to/',verfiyToken, followToUser);
 router.get('/get-following-users/:id',verfiyToken, getFollowingUsers);
 router.get('/get-followers/:id',verfiyToken, getFollowers);
 

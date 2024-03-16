@@ -26,9 +26,12 @@ export default function App() {
       <BrowserRouter>
         <Routes>
 
+        {!isLoggedIn && 
+          <>
           <Route path="/" element={<SignIn/>} />
           <Route path="/sign-up" element={<SignUp/>}/>
-    
+          </>
+        }
           
           {isLoggedIn && 
             <Route path="/dashboard" element={<NavBar/>} >

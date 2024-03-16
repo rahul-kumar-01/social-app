@@ -37,31 +37,31 @@ export default function Dashboard() {
       <div className="py-2">
         <h1 className="text-4xl font-bold">Dashboard</h1>
         <p className="text-gray-500">Welcome back, John Doe</p>
-        <p className='pt-5 text-md font-semibold '>{feeds.length >0 ? <span>Recent Feeds: </span> : <span>No Feeds ...</span> }</p>
+        <p className='pt-5 text-md font-semibold '>{feeds && feeds.length >0 ? <span>Recent Feeds: </span> : <span>No Feeds ...</span> }</p>
       </div>
-
-
-      {feeds.length > 0 ? 
-      (
-        feeds.map((feed) => {
-          return (
-            <div className="bg-white p-4 rounded-lg shadow-md my-4">
-              <div className="flex items-center">
-                <img src={feed.post.user.avatar} alt={feed.post.user.name} className="w-8 h-8 rounded-full mr-2" />
-                <p className="text-sm font-medium">{feed.post.user.name}</p>
+    <div className='max-w-xl'>
+      {feeds && feeds.length > 0 ? 
+        (
+          feeds.map((feed) => {
+            return (
+              <div className="bg-white p-4 rounded-lg shadow-md my-4">
+                <div className="flex items-center">
+                  <img src={feed.post.user.avatar} alt={feed.post.user.name} className="w-8 h-8 rounded-full mr-2" />
+                  <p className="text-sm font-medium">{feed.post.user.name}</p>
+                </div>
+                <p className='py-2 text-md' style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>{feed.post.content}</p>
               </div>
-              <p className='py-2 text-md' style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>{feed.post.content}</p>
-            </div>
-          )
-        })
-      )
-      :
-      (
-        <> 
-          <p className='text-[rgb(131,119,248)] cursor-pointer' onClick={()=>{navigate('/dashboard/search')}}>Add some friends</p>
-        </>
-      )
+            )
+          })
+        )
+        :
+        (
+          <> 
+            <p className='text-[rgb(131,119,248)] cursor-pointer' onClick={()=>{navigate('/dashboard/search')}}>Add some friends</p>
+          </>
+        )
       }
+    </div>
     </>
   )
 }

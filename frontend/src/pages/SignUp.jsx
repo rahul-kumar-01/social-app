@@ -53,6 +53,7 @@ export default function SignUp() {
       setLoading(false);
     }catch(err){
       setError(err.message);
+      setLoading(false);
     }
   }
 
@@ -124,7 +125,7 @@ export default function SignUp() {
         </div>
 
 
-        <button type='submit' className="w-full py-1.5 px-3 bg-[rgb(115,102,240)] hover:bg-[rgb(103,90,215)] text-white rounded-lg font-medium focus:outline-none  sm:px-4 ">
+        <button type='submit' className={`w-full py-1.5 px-3 bg-[rgb(115,102,240)] hover:bg-[rgb(103,90,215)] text-white rounded-lg font-medium focus:outline-none  sm:px-4 ${loading ? 'cursor-not-allowed' : 'null'}`}>
           {loading ? <>Loading...</> : <>Sign Up</>} 
         </button>
         {error && <p className='text-red-500 text-sm mt-4'>{error}</p>}

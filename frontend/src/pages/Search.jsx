@@ -14,8 +14,7 @@ export default function Search() {
 
     const currentUser = useSelector((state) => state.user.currentUser);
 
-  const searchUsers = async (e) => {
-    e.preventDefault();
+  const searchUsers = async () => {
     setSearchLoading(true);
     try {
       const response = await fetch(`${proxy}/api/user/search-users/${query}`, {
@@ -38,12 +37,15 @@ export default function Search() {
     setQuery(e.target.value);
   };
 
+  // useEffect(() => {
+  //   searchUsers();
+  // }, [query]);
 
   const handleAddFriend = async (id) => {
     setAddLoading(true);
     try {
       const response = await fetch(`${proxy}/api/user/follow-to?currentUserId=${currentUser._id.toString()}&followingUserId=${id}`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -64,10 +66,7 @@ export default function Search() {
         <p className="text-gray-500">Welcome back, John Doe</p>
       </div>
 
-
-        <form onSubmit={(e)=>searchUsers(e)}
-          className='max-w-md mx-auto mt-8 flex border rounded-lg items-center gap-2 border-indigo-500 px-2'
-        >
+      <div className="max-w-md mx-auto mt-8 flex border rounded-lg items-center gap-2 border-indigo-500 px-2">
         <input
           type="text"
           value={query}
@@ -77,10 +76,9 @@ export default function Search() {
         />
         <MagnifyingGlassIcon
           className="w-6 h-6 top-3 right-3 black cursor-pointer"
-          onClick={(e)=>searchUsers(e)}
+          onClick={searchUsers}
         />
-        </form>
-
+      </div>
 
       {searchLoading ? <p className='text-lg p-5'>Loading...</p> : 
       (

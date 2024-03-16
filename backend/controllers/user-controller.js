@@ -110,6 +110,7 @@ export const followToUser = async (req, res, next) => {
         console.log('user_to_follow',user_to_follow.posts);
 
         await Promise.all(user_to_follow.posts.map(async (post_obj) => {
+            console.log("asdf",post_obj);
             const feed = await Feed.create({ user: currentUser._id, post: post_obj });
             console.log("feed", feed);
             currentUser.feeds.unshift(feed._id);
@@ -145,7 +146,6 @@ export const getUpdatedFeed = async (req, res, next) => {
         const feeds = user.feeds;
         let populatedFeeds = [];
         await Promise.all(feeds.map(async (feed) => {
-            // 
             const temp = await Feed.findById(feed).populate({
                 path: 'post',
                 populate: {
@@ -157,19 +157,14 @@ export const getUpdatedFeed = async (req, res, next) => {
             populatedFeeds.push(temp);  
         }));
 
-        user.following.map(async (followingUser) => {
-            const followingUserPosts = await User.findById(followingUser).populate('posts');
-            followingUserPosts.posts.map(async (post) => {
-                console.log("post",post);
-                populatedFeeds.push(post);
-            })
-        });
+        console.log("populatedFeeds",populatedFeeds);
         
         // const unseenFeed = feeds.filter((feed) => !feed.seen);
         // feeds.map(async (feed) => {
         //     feed.seen = true;
         //     await feed.save();
         // })
+
         return res.status(200).json({ success: 'true', data: populatedFeeds });
     } catch (err) {
         next(err);
