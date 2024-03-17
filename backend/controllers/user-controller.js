@@ -66,6 +66,7 @@ export const updateUser = async (req, res, next) => {
             const salt = await bcrypt.genSalt(10);
             req.body.password = await bcrypt.hash(req.body.password, salt);
         }
+        if(req.user.id === '65f5a219f337490ad6296afc') errorHandler(404, 'You can not update demo account');
         const user = await User.findByIdAndUpdate(req.user, 
             {
                 $set: {
