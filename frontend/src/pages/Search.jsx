@@ -81,7 +81,9 @@ export default function Search() {
           className="w-6 h-6 top-3 right-3 black cursor-pointer"
           onClick={searchUsers}
         />
+        
       </div>
+      <span className='text-sm'>Users already have account : rahul, kirtan, garv, ram </span>
       <div className='max-w-lg'>
 
       
@@ -108,9 +110,10 @@ export default function Search() {
                   <p className="text-gray-500">{friend.bio}</p>
                 </div>
               </div>
-              <CheckBadgeIcon
+              {/* <CheckBadgeIcon
                 className="w-6 h-6 text-green-500 cursor-pointer"
-              />
+              /> */}
+              <button className='text-white p-2 rounded-lg bg-gray-400 min-w-[100px] cursor-not-allowed'>Unfollow</button>
             </div>
           ))}
         </div>
@@ -138,10 +141,13 @@ export default function Search() {
                       addLoading ? (
                         <p>Loading...</p>
                       ) : (
-                        <UserPlusIcon
-                          className="w-6 h-6 text-blue-500 cursor-pointer"
-                          onClick={() => handleAddFriend(nonFriend._id)}
-                        />
+                        // <UserPlusIcon
+                        //   className="w-6 h-6 text-blue-500 cursor-pointer"
+                        //   onClick={() => handleAddFriend(nonFriend._id)}
+                        // />
+                        <button className='text-white p-2 rounded-lg bg-[rgb(120,106,248)] min-w-[100px]'
+                        onClick={() => handleAddFriend(nonFriend._id)}
+                        >Follow</button>
                       )
                     }
                   </div>
