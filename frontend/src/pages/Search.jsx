@@ -84,6 +84,7 @@ export default function Search() {
         
       </div>
       <span className='text-sm'>Users already have account : rahul, kirtan, garv, ram </span>
+      <p className='text-sm py-2'>Working on unfollow button</p>
       <div className='max-w-lg'>
 
       
