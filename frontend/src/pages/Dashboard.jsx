@@ -39,7 +39,7 @@ export default function Dashboard() {
     <>
 
       <div className="py-2">
-        <h1 className="text-4xl font-bold">Dashboard</h1>
+        <h1 className="text-2xl font-bold sm:text-4xl">Dashboard</h1>
         <p className="text-gray-500">Welcome back, {user.name}</p>
         <p className='pt-5 text-md font-semibold '>
         {!loading ? (feeds.length === 0 ? <p>No Feeds ...</p> : <p>Recent Feeds: </p>) : null}

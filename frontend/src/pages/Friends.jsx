@@ -10,6 +10,7 @@ export default function Friends() {
   const [following, setFollowing] = React.useState([]);
   const [showFollowing, setShowFollowing] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(null);
 
   const handleFollowers = async () => {
     setLoading(true);
@@ -55,15 +56,58 @@ export default function Friends() {
     handleFollowers();
   },[]);
 
+  const handleFollow = async (id) => {
+    // setAddLoading(true);
+    try {
+      const response = await fetch(`${proxy}/api/user/follow-to?currentUserId=${currentUser._id.toString()}&followingUserId=${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if(data.success == false || data.success == 'false') {
+        setError(data.message);
+      }
+      else{
+        handleFollowers();
+      }
+      
+    } catch (error) {
+      setError(data.message);
+      console.error('Error adding friend:', error);
+    }
+  }
+
+  const handleUnfollow = async (id) => {
+    // setAddLoading(true);
+    try {
+      const response = await fetch(`${proxy}/api/user/unfollow-to?currentUserId=${currentUser._id.toString()}&unfollowingUserId=${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      const data = await response.json();
+      console.log(data);
+
+      // setAddLoading(false);
+      handleFollowing();
+    } catch (error) {
+      console.error('Error adding friend:', error);
+    }
+  }
 
 
   return (
     <>
       <div className="py-2">
-        <h1 className="text-4xl font-bold">Friends</h1>
+        <h1 className="text-2xl font-bold sm:text-4xl">Friends</h1>
         <p className="text-gray-500">Welcome back, {currentUser.name}</p>
       </div>
-      <div className="flex  space-x-4 py-4">
+      <div className="flex  space-x-4 py-4 max-w-xl">
         <button
           className={` ${
             showFollowing
@@ -89,7 +133,7 @@ export default function Friends() {
         </button>
       </div>
 
-
+    <div className='max-w-2xl'>
       {loading ? (
           <> 
             <p className='p-3 text-lg'>Loading...</p>
@@ -115,10 +159,11 @@ export default function Friends() {
                               <p className="text-gray-500">{follow.bio}</p>
                             </div>
                           </div>
-                          {/* <PlusCircleIcon
-                            className="w-6 h-6 text-blue-500 cursor-pointer"
-                            onClick={() => handleAddFriend(follow._id)}
-                          /> */}
+                          <button
+                            className={ `bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded ${loading ? 'cursor-not-allowed' : ''} ` }
+                            onClick={()=>handleUnfollow(follow._id)
+                            }
+                          >Unfollow</button>
                         </div>
                       ))}
                   </>
@@ -128,8 +173,9 @@ export default function Friends() {
                       {followers && followers.map((follower) => (
                         <div
                           key={follower._id}
-                          className="bg-white shadow-md rounded-md p-4 mb-4 flex items-center justify-between"
+                          className="bg-white shadow-md rounded-md p-1 sm:p-4 mb-4 flex items-center justify-between gap-2"
                         >
+
                           <div className="flex items-center">
                             <img
                               src={follower.avatar}
@@ -141,11 +187,30 @@ export default function Friends() {
                               <p className="text-gray-500">{follower.bio}</p>
                             </div>
                           </div>
-                          {/* <PlusCircleIcon
-                            className="w-6 h-6 text-blue-500 cursor-pointer"
-                            onClick={() => handleAddFriend(follower._id)}
-                          /> */}
+
+
+                          <div className='  flex flex-wrap gap-2'>
+                              <button
+                                  className={`bg-[rgb(131,119,248)] hover:bg-[rgb(120,106,248)] text-white min-w-[120px]
+                                    py-2 px-4 rounded ${loading ? 'cursor-not-allowed' : '' }`}
+                                  onClick={()=>handleFollow(follower._id)}
+                                  disabled={loading} 
+                                >
+                                  Follow Back
+                                </button>
+
+                                <button
+                                  className={ `bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded min-w-[120px] cursor-not-allowed`}
+                                  onClick={()=>handleFollow(follower._id)}
+                                  disabled={loading} 
+                                >
+                                  Remove
+                                </button>
+                          </div>
+
+
                         </div>
+                        
                       ))}
                   </>
                 )
@@ -153,10 +218,12 @@ export default function Friends() {
           </>
       )}
 
+'
+      <p className='text-red-600 '>{error}</p>
      
         
 
-            
+    </div>  
 
     </>
   )

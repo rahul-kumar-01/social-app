@@ -38,10 +38,7 @@ export default function Search() {
     setQuery(e.target.value);
   };
 
-  // useEffect(() => {
-  //   searchUsers();
-  // }, [query]);
-
+  
   const handleAddFriend = async (id) => {
     setAddLoading(true);
     try {
@@ -60,10 +57,29 @@ export default function Search() {
     }
   }
 
+  const handleUnfollow = async (id) => {
+    setAddLoading(true);
+    try {
+      const response = await fetch(`${proxy}/api/user/unfollow-to?currentUserId=${currentUser._id.toString()}&unfollowingUserId=${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      const data = await response.json();
+      console.log(data);
+      setAddLoading(false);
+      searchUsers();
+    } catch (error) {
+      console.error('Error adding friend:', error);
+    }
+  }
+
   return (
     <>
       <div className="py-2">
-        <h1 className="text-4xl font-bold">Search</h1>
+        <h1 className="text-2xl font-bold sm:text-4xl">Search</h1>
         <p className="text-gray-500">Welcome back, {currentUser.name}</p>
       </div>
 
@@ -84,7 +100,7 @@ export default function Search() {
         
       </div>
       <span className='text-sm'>Users already have account : rahul, kirtan, garv, ram </span>
-      <p className='text-sm py-2'>Working on unfollow button</p>
+
       <div className='max-w-lg'>
 
       
@@ -114,7 +130,7 @@ export default function Search() {
               {/* <CheckBadgeIcon
                 className="w-6 h-6 text-green-500 cursor-pointer"
               /> */}
-              <button className='text-white p-2 rounded-lg bg-gray-400 min-w-[100px] cursor-not-allowed'>Unfollow</button>
+              <button className='text-white p-2 rounded-lg bg-gray-400 min-w-[100px]' onClick={()=>handleUnfollow(friend._id)}>Unfollow</button>
             </div>
           ))}
         </div>

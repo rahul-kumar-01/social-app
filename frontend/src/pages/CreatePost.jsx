@@ -99,7 +99,7 @@ const FormComponent = () => {
   return (
     <>
     <div className="py-2">
-        <h1 className="text-4xl font-bold">Create Post</h1>
+        <h1 className="text-2xl font-bold sm:text-4xl">Create Post</h1>
         <p className="text-gray-500">Welcome back, {user.name}</p>
       </div>
 
@@ -128,7 +128,7 @@ const FormComponent = () => {
     </form>
 
     <div className="py-2">
-        <h1 className="text-2xl font-bold">Recent Post</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">Recent Post</h1>
       </div>
 
     {loadingPost && <p className='p-3 text-[rgb(131,119,248)] text-lg'>Loading...</p>}
@@ -141,8 +141,8 @@ const FormComponent = () => {
             loadingDelete  && deleteIndex == index ? 'Loading...' : 
             (
               
-              <div>
-                  <TrashIcon className={`w-6 h-6 text-red-500 cursor-pointer ${loadingDelete ? 'opacity-50' : ''}`}
+              <div className='ml-[5px]'>
+                  <TrashIcon className={`w-6 h-6 text-red-500  ${loadingDelete ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     onClick={loadingDelete ? null : () => handleDeletePost(post._id.toString(), index)}/>
               </div>
               

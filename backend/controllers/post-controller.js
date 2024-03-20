@@ -15,7 +15,7 @@ export const createPost = async (req, res, next) => {
         const feed = await Feed.create({ user: req.user._id, post: post._id });
         user.followers.forEach(async (follower) => {
             const followerUser = await User.findById(follower);
-            followerUser.feeds.push(feed._id);
+            followerUser.feeds.unshift(feed._id);
             await followerUser.save();
         });
         await user.save();

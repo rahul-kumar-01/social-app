@@ -108,19 +108,38 @@ export const followToUser = async (req, res, next) => {
         if(currentUser.following.includes(user_to_follow._id)) return errorHandler(401, 'You already follow this user');
         currentUser.following.push(user_to_follow._doc);
         user_to_follow.followers.push(currentUser._doc);
-        console.log('user_to_follow',user_to_follow.posts);
 
         await Promise.all(user_to_follow.posts.map(async (post_obj) => {
-            console.log("asdf",post_obj);
             const feed = await Feed.create({ user: currentUser._id, post: post_obj });
-            console.log("feed", feed);
             currentUser.feeds.unshift(feed._id);
-            console.log("a", currentUser.feeds);
         }));
         
         await currentUser.save();
         await user_to_follow.save();
         return res.status(200).json({ success: 'true', message: `${currentUser.name} start follow ${user_to_follow.name}` });
+    }catch(err){
+        next(err);
+    }
+}
+
+export const unfollowToUser = async (req, res, next) => {
+    try{
+        console.log(req.query);
+        if(req.query.currentUserId !== req.user.id) errorHandler(401, 'Unauthorized');
+        if(req.query.currentUserId === req.query.unfollowingUserId) errorHandler(401,'You can not unfollow yourself');
+        const currentUser = await User.findOne({_id:req.query.currentUserId});
+        const user_to_unfollow = await User.findOne({_id:req.query.unfollowingUserId});
+        if(!user_to_unfollow) return errorHandler(404, 'User to un-follow is not found');
+        if(!currentUser.following.includes(user_to_unfollow._id)) return errorHandler(401, 'You do not follow this user');
+        currentUser.following = currentUser.following.filter((id) => id.toString() !== user_to_unfollow.id);
+        user_to_unfollow.followers = user_to_unfollow.followers.filter((id) => id.toString() !== currentUser.id);
+        await Promise.all(user_to_unfollow.posts.map(async (post_obj) => {
+            const feed = await Feed.findOneAndDelete({ user: currentUser._id, post: post_obj });
+            currentUser.feeds = currentUser.feeds.filter((id) => id !== feed._id);
+        }));
+        await currentUser.save();
+        await user_to_unfollow.save();
+        return res.status(200).json({ success: 'true', message: `${currentUser.name} stop follow ${user_to_unfollow.name}` });
     }catch(err){
         next(err);
     }

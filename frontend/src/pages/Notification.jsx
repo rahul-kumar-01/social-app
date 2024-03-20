@@ -8,7 +8,7 @@ export default function Notification() {
 
 
     <div className="py-2">
-        <h1 className="text-4xl font-bold">Notification</h1>
+        <h1 className="text-2xl font-bold sm:text-4xl">Notification</h1>
         <p className="text-gray-500">Welcome back, {user.name}</p>
     </div>
 

@@ -10,7 +10,8 @@ import {
     getUpdatedFeed,
     searchUsers,
     getFollowingUsers,
-    getFollowers
+    getFollowers,
+    unfollowToUser
 } from '../controllers/user-controller.js'
 import { verfiyToken } from '../utils/verfiyToken.js';
 
@@ -30,6 +31,6 @@ router.get('/search-users/:query',verfiyToken,searchUsers);      //query is name
 router.post('/follow-to/',verfiyToken, followToUser);
 router.get('/get-following-users/:id',verfiyToken, getFollowingUsers);
 router.get('/get-followers/:id',verfiyToken, getFollowers);
-
+router.post('/unfollow-to/',verfiyToken, unfollowToUser);
 
 export default router;
